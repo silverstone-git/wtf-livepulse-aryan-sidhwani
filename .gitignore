@@ -1,0 +1,27 @@
+# Standard Ignores
+node_modules/
+dist/
+.env
+.env.local
+postgres_data/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+
+# Assignment specific files not in the Mermaid diagram (Required Repository Structure)
+ARCHITECTURE.md
+CONSTRAINTS.md
+data_specification.md
+TODO.md
+GEMINI.md
+TESTS.md
+main_plan.md
+run_benchmarks.sh
+parse_benchmarks.sh
+stitch_wtf_livepulse_command_center/
+*.png
+
+# Keeping only what is mentioned in main_plan.md:
+# Root: docker-compose.yml, .env.example, README.md, backend/, frontend/, benchmarks/

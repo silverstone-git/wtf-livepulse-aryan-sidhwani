@@ -1,0 +1,83 @@
+version: "3.9"
+
+services:
+  # ──────────────────────────────────────────────────────────────────────────
+  # PostgreSQL 15 — single source of truth
+  # Migrations in /docker-entrypoint-initdb.d/ run automatically on first init
+  # ──────────────────────────────────────────────────────────────────────────
+  db:
+    image: postgres:15-alpine
+    container_name: wtf_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB:       wtf_livepulse
+      POSTGRES_USER:     wtf
+      POSTGRES_PASSWORD: wtf_secret
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      # All numbered .sql files here execute in order on first DB init
+      - ./backend/src/db/migrations:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U wtf -d wtf_livepulse"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  # ──────────────────────────────────────────────────────────────────────────
+  # Node.js 20 backend — REST + WebSocket + anomaly detector + simulator
+  # Waits for db healthcheck before starting
+  # Runs seed check on every startup (idempotent)
+  # ──────────────────────────────────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: wtf_backend
+    restart: unless-stopped
+    environment:
+      DATABASE_URL:      postgres://wtf:wtf_secret@db:5432/wtf_livepulse
+      PORT:              3001
+      NODE_ENV:          development
+      # How often the anomaly detector polls (ms)
+      ANOMALY_INTERVAL:  30000
+      # Simulator default speed multiplier
+      SIM_DEFAULT_SPEED: 1
+    ports:
+      - "3001:3001"
+    depends_on:
+      db:
+        condition: service_healthy
+    # app.js checks if DB is empty and triggers seed.js before starting server
+    command: node src/app.js
+    volumes:
+      # Hot-reload friendly: mount source but not node_modules
+      - ./backend/src:/app/src:ro
+
+  # ──────────────────────────────────────────────────────────────────────────
+  # React 18 frontend — Vite build served via nginx
+  # ──────────────────────────────────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: http://localhost:3001
+        VITE_WS_URL:  ws://localhost:3001
+    container_name: wtf_frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
+    driver: local
+
+# Internal network — all services can reach each other by container name
+networks:
+  default:
+    name: wtf_network

@@ -1,0 +1,14 @@
+                                                                     QUERY PLAN                                                                     
+----------------------------------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=4.83..4.84 rows=1 width=8) (actual time=0.154..0.155 rows=1 loops=1)
+   Buffers: shared hit=2
+   ->  Index Only Scan using idx_checkins_live_occupancy on checkins  (cost=0.15..4.74 rows=34 width=0) (actual time=0.038..0.098 rows=280 loops=1)
+         Index Cond: (gym_id = 3)
+         Heap Fetches: 0
+         Buffers: shared hit=2
+ Planning:
+   Buffers: shared hit=123
+ Planning Time: 1.581 ms
+ Execution Time: 0.254 ms
+(10 rows)
+

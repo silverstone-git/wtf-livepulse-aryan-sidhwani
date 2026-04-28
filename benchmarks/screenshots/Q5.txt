@@ -1,0 +1,23 @@
+                                                                 QUERY PLAN                                                                  
+---------------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=115.56..115.58 rows=10 width=36) (actual time=1.176..1.179 rows=10 loops=1)
+   Sort Key: (sum(amount)) DESC
+   Sort Method: quicksort  Memory: 25kB
+   Buffers: shared hit=54
+   ->  HashAggregate  (cost=115.26..115.39 rows=10 width=36) (actual time=1.100..1.106 rows=10 loops=1)
+         Group Key: gym_id
+         Batches: 1  Memory Usage: 24kB
+         Buffers: shared hit=51
+         ->  Bitmap Heap Scan on payments  (cost=32.58..107.33 rows=1586 width=9) (actual time=0.142..0.493 rows=1578 loops=1)
+               Recheck Cond: (paid_at >= (now() - '30 days'::interval))
+               Heap Blocks: exact=47
+               Buffers: shared hit=51
+               ->  Bitmap Index Scan on idx_payments_date  (cost=0.00..32.18 rows=1586 width=0) (actual time=0.125..0.126 rows=1578 loops=1)
+                     Index Cond: (paid_at >= (now() - '30 days'::interval))
+                     Buffers: shared hit=4
+ Planning:
+   Buffers: shared hit=142
+ Planning Time: 1.841 ms
+ Execution Time: 1.405 ms
+(19 rows)
+

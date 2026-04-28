@@ -1,0 +1,13 @@
+                                                              QUERY PLAN                                                               
+---------------------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=10.08..10.09 rows=1 width=32) (actual time=0.023..0.024 rows=1 loops=1)
+   Buffers: shared hit=2
+   ->  Index Scan using idx_payments_gym_date on payments  (cost=0.29..10.08 rows=2 width=5) (actual time=0.019..0.019 rows=0 loops=1)
+         Index Cond: ((gym_id = 3) AND (paid_at >= CURRENT_DATE))
+         Buffers: shared hit=2
+ Planning:
+   Buffers: shared hit=125
+ Planning Time: 1.414 ms
+ Execution Time: 0.119 ms
+(9 rows)
+
