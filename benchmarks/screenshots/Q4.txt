@@ -1,15 +1,15 @@
                                                                QUERY PLAN                                                               
 ----------------------------------------------------------------------------------------------------------------------------------------
- Bitmap Heap Scan on gym_hourly_stats  (cost=5.20..14.69 rows=119 width=21) (actual time=0.052..0.085 rows=119 loops=1)
-   Recheck Cond: (gym_id = 3)
+ Bitmap Heap Scan on gym_hourly_stats  (cost=5.12..14.48 rows=109 width=32) (actual time=0.040..0.068 rows=109 loops=1)
+   Recheck Cond: (gym_id = 'ea43605a-f585-4543-8c62-3da0dde0ebb3'::uuid)
    Heap Blocks: exact=8
-   Buffers: shared hit=8 read=3
-   ->  Bitmap Index Scan on idx_gym_hourly_stats_unique  (cost=0.00..5.17 rows=119 width=0) (actual time=0.040..0.040 rows=119 loops=1)
-         Index Cond: (gym_id = 3)
-         Buffers: shared read=3
+   Buffers: shared hit=10
+   ->  Bitmap Index Scan on idx_gym_hourly_stats_unique  (cost=0.00..5.09 rows=109 width=0) (actual time=0.026..0.026 rows=109 loops=1)
+         Index Cond: (gym_id = 'ea43605a-f585-4543-8c62-3da0dde0ebb3'::uuid)
+         Buffers: shared hit=2
  Planning:
-   Buffers: shared hit=83 read=1
- Planning Time: 1.076 ms
- Execution Time: 0.247 ms
+   Buffers: shared hit=84
+ Planning Time: 1.061 ms
+ Execution Time: 0.206 ms
 (11 rows)
 

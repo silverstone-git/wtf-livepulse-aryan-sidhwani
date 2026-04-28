@@ -1,14 +1,14 @@
-                                                                     QUERY PLAN                                                                     
-----------------------------------------------------------------------------------------------------------------------------------------------------
- Aggregate  (cost=4.83..4.84 rows=1 width=8) (actual time=0.154..0.155 rows=1 loops=1)
-   Buffers: shared hit=2
-   ->  Index Only Scan using idx_checkins_live_occupancy on checkins  (cost=0.15..4.74 rows=34 width=0) (actual time=0.038..0.098 rows=280 loops=1)
-         Index Cond: (gym_id = 3)
+                                                                   QUERY PLAN                                                                    
+-------------------------------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=8.06..8.07 rows=1 width=8) (actual time=0.032..0.032 rows=1 loops=1)
+   Buffers: shared hit=1
+   ->  Index Only Scan using idx_checkins_live_occupancy on checkins  (cost=0.12..8.06 rows=1 width=0) (actual time=0.028..0.028 rows=0 loops=1)
+         Index Cond: (gym_id = 'ea43605a-f585-4543-8c62-3da0dde0ebb3'::uuid)
          Heap Fetches: 0
-         Buffers: shared hit=2
+         Buffers: shared hit=1
  Planning:
-   Buffers: shared hit=123
- Planning Time: 1.581 ms
- Execution Time: 0.254 ms
+   Buffers: shared hit=128
+ Planning Time: 1.544 ms
+ Execution Time: 0.133 ms
 (10 rows)
 
