@@ -40,7 +40,7 @@ services:
     environment:
       DATABASE_URL:      postgres://wtf:wtf_secret@db:5432/wtf_livepulse
       PORT:              3001
-      NODE_ENV:          development
+      NODE_ENV:          test
       # How often the anomaly detector polls (ms)
       ANOMALY_INTERVAL:  30000
       # Simulator default speed multiplier

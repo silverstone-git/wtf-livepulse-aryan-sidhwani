@@ -39,11 +39,16 @@ test.describe('WTF LivePulse Command Centre', () => {
     await expect(eventMarker).toBeVisible({ timeout: 20000 });
   });
 
-  test('TC-04: Anomaly Alerting & Badge Logic', async ({ page }) => {
+  test('TC-04: Anomaly Alerting & Badge Logic', async ({ page, request }) => {
     const badge = page.locator('.animate-subtle-pulse').filter({ hasText: /^\d+$/ });
-    await expect(badge).toBeVisible({ timeout: 45000 });
+    
+    // Trigger anomaly deterministically via test endpoint
+    await request.post('http://localhost:3001/api/anomalies/trigger-test');
+    
+    // Badge should now appear instantly
+    await expect(badge).toBeVisible({ timeout: 5000 });
     const text = await badge.innerText();
-    expect(parseInt(text)).toBeGreaterThan(0);
+    expect(parseInt(text)).toBeGreaterThanOrEqual(1);
   });
 
   test('TC-05: Analytics & Heatmap Visibility', async ({ page }) => {

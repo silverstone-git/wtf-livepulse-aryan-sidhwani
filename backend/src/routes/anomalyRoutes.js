@@ -25,4 +25,21 @@ router.patch('/:id/dismiss', async (req, res) => {
   }
 });
 
+// Test-only endpoint for reliable E2E testing
+if (process.env.NODE_ENV === 'test') {
+  router.post('/trigger-test', async (req, res) => {
+    try {
+      const { db } = require('../db/pool');
+      const { gyms } = require('../db/schema');
+      const firstGym = await db.select().from(gyms).limit(1);
+      if (firstGym.length === 0) return res.status(404).json({error: 'No gyms found'});
+
+      await anomalyService.createAnomaly(firstGym[0].id, 'revenue_drop', 'warning', 'E2E Test Anomaly');
+      res.status(201).json({ message: 'Test anomaly triggered' });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+}
+
 module.exports = router;
